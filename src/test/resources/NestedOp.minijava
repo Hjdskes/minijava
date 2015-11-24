@@ -1,0 +1,5 @@
+class NestedOp {
+    public static void main(String[] args) {
+        foo = 4 + 4 + 4;
+    }
+}

@@ -1,0 +1,8 @@
+foo
+FOO
+Foo
+foo_bar
+fooBar
+foo0
+if0
+foo_

@@ -1,0 +1,148 @@
+options {
+    STATIC = false;
+}
+
+PARSER_BEGIN(MiniJavaParser)
+    package org.hjdskes.id2202.generated.parser;
+
+    public class MiniJavaParser {}
+PARSER_END(MiniJavaParser)
+
+TOKEN : {
+    < #DIGIT: ["0"-"9"] >
+|   < CLASS: "class" >
+|   < PUBLIC: "public" >
+|   < STATIC: "static" >
+|   < VOID: "void" >
+|   < MAIN: "main" >
+|   < STRING: "String" >
+|   < EXTENDS: "extends" >
+|   < RETURN: "return" >
+|   < INT: "int" >
+|   < BOOLEAN: "boolean" >
+|   < IF: "if" >
+|   < ELSE: "else" >
+|   < WHILE: "while" >
+|   < PRINTLN: "System.out.println" >
+|   < LENGTH: "length" >
+|   < TRUE: "true" >
+|   < FALSE: "false" >
+|   < THIS: "this" >
+|   < NEW: "new" >
+|   < AND: "&&" >
+|   < LESS: "<" >
+|   < PLUS: "+" >
+|   < MINUS: "-" >
+|   < MULT: "*" >
+|   < IDENTIFIER: ["a"-"z","A"-"Z"](["a"-"z","A"-"Z","_"] | <DIGIT>)* >
+|   < INTEGER_LITERAL: (<DIGIT>)+ >
+}
+
+SKIP : {
+    < "//" (~["\n","\r"])* >
+|   < "/*" (~[])* "*/" >
+|   " "
+|   "\t"
+|   "\n"
+|   "\r"
+}
+
+void Program() :
+{}
+{ MainClass() (ClassDecl())* <EOF> }
+
+void MainClass() :
+{}
+{ <CLASS> <IDENTIFIER> "{" <PUBLIC> <STATIC> <VOID> <MAIN> "(" <STRING> "[" "]" <IDENTIFIER> ")" "{" Statement() "}" "}" }
+
+void ClassDecl() :
+{}
+{ <CLASS> <IDENTIFIER> (<EXTENDS> <IDENTIFIER>)? "{" (VarDecl())* (MethodDecl())* "}" }
+
+void VarDecl() :
+{}
+{ Type() <IDENTIFIER> ";" }
+
+void MethodDecl() :
+{}
+{ <PUBLIC> Type() <IDENTIFIER> "(" FormalList() ")" "{" (LOOKAHEAD(2) VarDecl())* (Statement())* <RETURN> Exp() ";" "}" }
+
+void FormalList() :
+{}
+{ [ Type() <IDENTIFIER> (FormalRest())* ] }
+
+void FormalRest() :
+{}
+{ "," Type() <IDENTIFIER> }
+
+void Type() :
+{}
+{ LOOKAHEAD(2) <INT> "[" "]"
+|              <INT>
+| <BOOLEAN >
+| <IDENTIFIER>
+}
+
+void Statement() :
+{}
+{ "{" (Statement())* "}"
+| <IF> "(" Exp() ")" Statement() <ELSE> Statement()
+| <WHILE> "(" Exp() ")" Statement()
+| <PRINTLN> "(" Exp() ")" ";"
+| LOOKAHEAD(2) <IDENTIFIER> "=" Exp() ";"
+|              <IDENTIFIER> "[" Exp() "]" "=" Exp() ";"
+}
+
+/* The Exp() handling is taken from http://cs.gettysburg.edu/~tneller/cs374/hw3.html */
+void Exp() :
+{}
+{ And() }
+
+void And() :
+{}
+{ LessThan() (<AND> LessThan())* }
+
+void LessThan() :
+{}
+{ AdditiveExp() [ <LESS> AdditiveExp() ] }
+
+void AdditiveExp() :
+{}
+{ Times() ((<PLUS> | <MINUS>) Times())* }
+
+void Times() :
+{}
+{ PrefixExp() (<MULT> PrefixExp())* }
+
+void PrefixExp() :
+{}
+{ Not() | PostfixExp() }
+
+void Not() :
+{}
+{ ("!")+ PostfixExp() }
+
+void PostfixExp() :
+{}
+{ PrimaryExp() ("[" Exp() "]" | LOOKAHEAD(2) "." <IDENTIFIER> "(" ExpList() ")"
+                              |              "." <LENGTH> )* }
+
+void PrimaryExp() :
+{}
+{ <INTEGER_LITERAL>
+| <TRUE>
+| <FALSE>
+| <IDENTIFIER>
+| <THIS>
+| "(" Exp() ")"
+| LOOKAHEAD(2) <NEW> <INT> "[" Exp() "]"
+|              <NEW> <IDENTIFIER> "(" ")"
+}
+
+void ExpList() :
+{}
+{ [ Exp() (ExpRest())* ] }
+
+void ExpRest() :
+{}
+{ "," Exp() }

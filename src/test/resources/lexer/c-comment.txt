@@ -1,0 +1,16 @@
+/* foo bar baz */
+/* WF@R$#T#~#@R$ 0009+&&_1234 */
+/***/
+/*
+   multiline
+*/
+/* Another
+ * Multiline
+ */
+/* trying /* nested */ comments */
+/* unfinished /* nested comments */
+/**
+ * Yet
+ * Another
+ * Multiline
+ */

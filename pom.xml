@@ -1,0 +1,246 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.hjdskes.id2202</groupId>
+    <artifactId>minijava</artifactId>
+    <packaging>jar</packaging>
+    <version>0.1</version>
+    <name>The MiniJava Compiler</name>
+    <description>Programming assignments from `Modern Compiler Implementation in Java`</description>
+    <url>https://github.com/Unia/minijava</url>
+
+    <developers>
+        <developer>
+            <name>Jente Hidskes</name>
+            <email>hjdskes@gmail.com</email>
+            <url>https://unia.github.io</url>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>Revised BSD 3-clause</name>
+            <url>https://raw.githubusercontent.com/Unia/minijava/master/LICENSE</url>
+            <comments>The Revised BSD 3-clause license.</comments>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <!--dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
+            <scope>test</scope>
+        </dependency-->
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Compile Java 8 sources -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <!-- Checkstyle -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.17</version>
+                <dependencies>
+                    <!-- Update Checkstyle to version 6.12.1 at runtime -->
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>6.12.1</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <configLocation>${project.basedir}/checkstyle.xml</configLocation>
+                    <failOnViolation>true</failOnViolation>
+                    <logViolationsToConsole>true</logViolationsToConsole>
+                    <violationSeverity>warning</violationSeverity>
+                    <consoleOutput>false</consoleOutput>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <!-- Exclude generated lexer/parser in org.hjdskes.id2202.generated.* -->
+                    <excludes>**/generated/**/*</excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>verify-style</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- PMD -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.5</version>
+                <!-- Using the latest version here breaks the reporting -->
+                <!--dependencies>
+                    <dependency>
+                        <groupId>net.sourceforge.pmd</groupId>
+                        <artifactId>pmd-java</artifactId>
+                        <version>5.4.0</version>
+                    </dependency>
+                </dependencies-->
+                <configuration>
+                    <verbose>true</verbose>
+                    <excludes>
+                        <!-- Exclude generated lexer/parser in org.hjdskes.id2202.generated.* -->
+                        <exclude>**/generated/**/*</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>pmd-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>cpd-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>cpd-check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- FindBugs -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>3.0.3</version>
+                <configuration>
+                    <includeTests>true</includeTests>
+                    <!-- Exclude generated lexer/parser in org.hjdskes.id2202.generated.* -->
+                    <excludeFilterFile>${project.basedir}/findbugs-exclude.xml</excludeFilterFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>findbugs-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- JavaCC -->
+            <plugin>
+                <groupId>com.helger.maven</groupId>
+                <artifactId>ph-javacc-maven-plugin</artifactId>
+                <version>2.8.0</version>
+                <configuration>
+                    <jdkVersion>1.8</jdkVersion>
+                    <sourceDirectory>${project.build.sourceDirectory}/org/hjdskes/id2202/parser</sourceDirectory>
+                    <outputDirectory>${project.build.directory}/generated-sources/javacc</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>javacc</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>javacc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.8.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
+            <!-- Checkstyle -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.17</version>
+                <configuration>
+                    <configLocation>${project.basedir}/checkstyle.xml</configLocation>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <!-- Exclude generated lexer/parser in org.hjdskes.id2202.generated.* -->
+                    <excludes>**/generated/**/*</excludes>
+                </configuration>
+            </plugin>
+            <!-- JavaDoc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <configuration>
+                    <!-- Exclude generated lexer/parser in org.hjdskes.id2202.generated.* -->
+                    <excludePackageNames>*.generated.*</excludePackageNames>
+                </configuration>
+            </plugin>
+            <!-- JXR, dependency of both PMD and Checkstyle -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <!-- Exclude generated lexer/parser in org.hjdskes.id2202.generated.* -->
+                    <excludes>**/generated/**/*</excludes>
+                </configuration>
+            </plugin>
+            <!-- PMD -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.5</version>
+                <configuration>
+                    <includeTests>true</includeTests>
+                    <targetJdk>1.8</targetJdk>
+                    <skipEmptyReport>false</skipEmptyReport>
+                    <!-- Exclude generated lexer/parser in org.hjdskes.id2202.generated.* -->
+                    <excludes>
+                        <exclude>**/generated/**/*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <!-- FindBugs -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>3.0.3</version>
+                <configuration>
+                    <includeTests>true</includeTests>
+                    <!-- Exclude generated lexer/parser in org.hjdskes.id2202.generated.* -->
+                    <excludeFilterFile>${project.basedir}/findbugs-exclude.xml</excludeFilterFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>

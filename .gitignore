@@ -1,0 +1,19 @@
+# Emacs/vim session files
+*~
+.*.sw?
+
+# OSX stuff..
+.DS_Store
+
+# Eclipse generated files
+.checkstyle
+.classpath
+.project
+.settings/
+
+# IntelliJ-IDEA generated files
+*.iml
+.idea/
+
+# Maven target
+target/
