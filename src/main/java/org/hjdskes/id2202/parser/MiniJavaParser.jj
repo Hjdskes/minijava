@@ -5,6 +5,16 @@ options {
 PARSER_BEGIN(MiniJavaParser)
     package org.hjdskes.id2202.generated.parser;
 
+    import org.hjdskes.id2202.ast.classes.*;
+    import org.hjdskes.id2202.ast.classes.impl.*;
+    import org.hjdskes.id2202.ast.expression.*;
+    import org.hjdskes.id2202.ast.expression.impl.*;
+    import org.hjdskes.id2202.ast.statement.*;
+    import org.hjdskes.id2202.ast.statement.impl.*;
+    import org.hjdskes.id2202.ast.type.*;
+    import org.hjdskes.id2202.ast.type.impl.*;
+    import org.hjdskes.id2202.ast.*;
+
     public class MiniJavaParser {}
 PARSER_END(MiniJavaParser)
 
@@ -24,7 +34,7 @@ TOKEN : {
 |   < ELSE: "else" >
 |   < WHILE: "while" >
 |   < PRINTLN: "System.out.println" >
-|   < LENGTH: "length" >
+|   < LENGTH: ".length" >
 |   < TRUE: "true" >
 |   < FALSE: "false" >
 |   < THIS: "this" >
@@ -47,102 +57,269 @@ SKIP : {
 |   "\r"
 }
 
-void Program() :
-{}
-{ MainClass() (ClassDecl())* <EOF> }
-
-void MainClass() :
-{}
-{ <CLASS> <IDENTIFIER> "{" <PUBLIC> <STATIC> <VOID> <MAIN> "(" <STRING> "[" "]" <IDENTIFIER> ")" "{" Statement() "}" "}" }
-
-void ClassDecl() :
-{}
-{ <CLASS> <IDENTIFIER> (<EXTENDS> <IDENTIFIER>)? "{" (VarDecl())* (MethodDecl())* "}" }
-
-void VarDecl() :
-{}
-{ Type() <IDENTIFIER> ";" }
-
-void MethodDecl() :
-{}
-{ <PUBLIC> Type() <IDENTIFIER> "(" FormalList() ")" "{" (LOOKAHEAD(2) VarDecl())* (Statement())* <RETURN> Exp() ";" "}" }
-
-void FormalList() :
-{}
-{ [ Type() <IDENTIFIER> (FormalRest())* ] }
-
-void FormalRest() :
-{}
-{ "," Type() <IDENTIFIER> }
-
-void Type() :
-{}
-{ LOOKAHEAD(2) <INT> "[" "]"
-|              <INT>
-| <BOOLEAN >
-| <IDENTIFIER>
+Program Program() : {
+    MainClass mainClass;
+    ClassDecl curClass;
+    List<ClassDecl> classDeclarations = new List<ClassDecl>();
+} {
+    mainClass = MainClass() (curClass = ClassDecl() { classDeclarations.add(curClass); })* <EOF>
+    { return new Program(mainClass, classDeclarations); }
 }
 
-void Statement() :
-{}
-{ "{" (Statement())* "}"
-| <IF> "(" Exp() ")" Statement() <ELSE> Statement()
-| <WHILE> "(" Exp() ")" Statement()
-| <PRINTLN> "(" Exp() ")" ";"
-| LOOKAHEAD(2) <IDENTIFIER> "=" Exp() ";"
-|              <IDENTIFIER> "[" Exp() "]" "=" Exp() ";"
+MainClass MainClass() : {
+    Token className;
+    Token mainArgumentName;
+    Statement body;
+} {
+    <CLASS> className = <IDENTIFIER> "{"
+        <PUBLIC> <STATIC> <VOID> <MAIN> "(" <STRING> "[" "]" mainArgumentName = <IDENTIFIER> ")" "{"
+            body = Statement()
+        "}"
+    "}"
+    { return new MainClass(new Identifier(className.image), new Identifier(mainArgumentName.image), body); }
 }
 
-/* The Exp() handling is taken from http://cs.gettysburg.edu/~tneller/cs374/hw3.html */
-void Exp() :
-{}
-{ And() }
-
-void And() :
-{}
-{ LessThan() (<AND> LessThan())* }
-
-void LessThan() :
-{}
-{ AdditiveExp() [ <LESS> AdditiveExp() ] }
-
-void AdditiveExp() :
-{}
-{ Times() ((<PLUS> | <MINUS>) Times())* }
-
-void Times() :
-{}
-{ PrefixExp() (<MULT> PrefixExp())* }
-
-void PrefixExp() :
-{}
-{ Not() | PostfixExp() }
-
-void Not() :
-{}
-{ ("!")+ PostfixExp() }
-
-void PostfixExp() :
-{}
-{ PrimaryExp() ("[" Exp() "]" | LOOKAHEAD(2) "." <IDENTIFIER> "(" ExpList() ")"
-                              |              "." <LENGTH> )* }
-
-void PrimaryExp() :
-{}
-{ <INTEGER_LITERAL>
-| <TRUE>
-| <FALSE>
-| <IDENTIFIER>
-| <THIS>
-| "(" Exp() ")"
-| LOOKAHEAD(2) <NEW> <INT> "[" Exp() "]"
-|              <NEW> <IDENTIFIER> "(" ")"
+ClassDecl ClassDecl() : {
+    Token identifier;
+    VarDecl curVar;
+    List<VarDecl> variableDeclarations = new List<VarDecl>();
+    MethodDecl curMethod;
+    List<MethodDecl> methodDeclarations = new List<MethodDecl>();
+    Token extendee = null;
+} {
+    <CLASS> identifier = <IDENTIFIER> (<EXTENDS> extendee = <IDENTIFIER>)? "{"
+        (curVar = VarDecl() { variableDeclarations.add(curVar); })*
+        (curMethod = MethodDecl() { methodDeclarations.add(curMethod); })*
+    "}"
+    { return extendee == null ?
+        new ClassDeclSimple(new Identifier(identifier.image), variableDeclarations, methodDeclarations) :
+        new ClassDeclExtends(new Identifier(identifier.image), new Identifier(extendee.image), variableDeclarations, methodDeclarations);
+    }
 }
 
-void ExpList() :
-{}
-{ [ Exp() (ExpRest())* ] }
+VarDecl VarDecl() : {
+    Type type;
+    Token identifier;
+} {
+    type = Type() identifier = <IDENTIFIER> ";"
+    { return new VarDecl(type, new Identifier(identifier.image)); }
+}
 
-void ExpRest() :
-{}
-{ "," Exp() }
+MethodDecl MethodDecl() : {
+    Type type;
+    Token identifier;
+    List<Formal> formals = new List<Formal>();
+    VarDecl curVar;
+    List<VarDecl> variableDeclarations = new List<VarDecl>();
+    Statement curStm;
+    List<Statement> body = new List<Statement>();
+    Expression returnStatement;
+} {
+    <PUBLIC> type = Type() identifier = <IDENTIFIER> "(" formals = FormalList() ")" "{"
+        (LOOKAHEAD(2) curVar = VarDecl() { variableDeclarations.add(curVar); })*
+        (curStm = Statement() { body.add(curStm); })*
+        <RETURN> returnStatement = Expression() ";"
+    "}"
+    { return new MethodDecl(type, new Identifier(identifier.image), formals, variableDeclarations,
+                            body, returnStatement);
+    }
+}
+
+List<Formal> FormalList() : {
+    Type type;
+    Token identifier;
+    List<Formal> formals = new List<Formal>();
+} {
+    (
+        type = Type() identifier = <IDENTIFIER>
+        { formals.add(new Formal(type, new Identifier(identifier.image))); }
+
+        (
+            "," type = Type() identifier = <IDENTIFIER>
+            { formals.add(new Formal(type, new Identifier(identifier.image))); }
+        )*
+    )?
+    { return formals; }
+}
+
+Type Type() : {
+} {
+    LOOKAHEAD(2) <INT> "[" "]" { return new IntArrayType(); }
+|                <INT> { return new IntegerType(); }
+|                <BOOLEAN> { return new BooleanType(); }
+|                { Token identifier; } identifier = <IDENTIFIER> { return new IdentifierType(identifier.image); }
+}
+
+Statement Statement() : {
+} {
+    /* Block. */
+    (
+        { Statement statement; List<Statement> statements = new List<Statement>(); }
+        "{" (statement = Statement() { statements.add(statement); })* "}"
+        { return new Block(statements); }
+    )
+
+    /* If. */
+|   (
+        { Expression condition; Statement then; Statement els; }
+        <IF> "(" condition = Expression() ")" then = Statement() <ELSE> els = Statement()
+        { return new If(condition, then, els); }
+    )
+
+    /* While. */
+|   (
+        { Expression condition; Statement body; }
+        <WHILE> "(" condition = Expression() ")" body = Statement()
+        { return new While(condition, body); }
+    )
+
+    /* Print. */
+|   (
+        { Expression expression; }
+        <PRINTLN> "(" expression = Expression() ")" ";"
+        { return new Print(expression); }
+    )
+
+    /* (Array)Assign. */
+|   (
+        { Token identifier; Expression index = null; Expression expression; }
+        identifier = <IDENTIFIER> ("[" index = Expression() "]")? "=" expression = Expression() ";"
+        { return index == null ?
+            new Assign(new Identifier(identifier.image), expression) :
+            new ArrayAssign(new Identifier(identifier.image), index, expression);
+        }
+    )
+}
+
+/* The Expression() handling is taken from
+ * https://github.com/mikedouglas/MiniJava/blob/clojure/src/java/minijava/parser/jcc/MiniJavaParser.jj
+ */
+Expression Expression() : {
+    Expression expression;
+    Expression lessThan;
+} {
+    expression = LessThan()
+    (
+        LOOKAHEAD(2) <AND> lessThan = LessThan()
+        { expression = new BinOpExp(BinOp.AND, expression, lessThan); }
+    )*
+    { return expression; }
+}
+
+Expression LessThan() : {
+    Expression expression;
+    Expression addition;
+} {
+    expression = Addition()
+    (
+        LOOKAHEAD(2) <LESS> addition = Addition()
+        { expression = new BinOpExp(BinOp.LESSTHAN, expression, addition); }
+    )*
+    { return expression; }
+}
+
+Expression Addition() : {
+    Expression expression;
+    Expression multiplication;
+} {
+    expression = Multiplication()
+    (
+        LOOKAHEAD(2) <PLUS> multiplication = Multiplication()
+        { expression = new BinOpExp(BinOp.PLUS, expression, multiplication); }
+        |            <MINUS> multiplication = Multiplication()
+        { expression = new BinOpExp(BinOp.MINUS, expression, multiplication); }
+    )*
+    { return expression; }
+}
+
+Expression Multiplication() : {
+    Expression expression;
+    Expression not;
+} {
+    expression = Not()
+    (
+        LOOKAHEAD(2) <MULT> not = Not()
+        { expression = new BinOpExp(BinOp.TIMES, expression, not); }
+    )*
+    { return expression; }
+}
+
+Expression Not() : {
+    Expression expression;
+} {
+    LOOKAHEAD(2) "!" expression = Not() { return new UnOpExp(UnOp.NOT, expression); }
+    |                expression = Dot()
+    { return expression; }
+}
+
+Expression Dot() : {
+    Expression expression;
+    Expression rightHandSide;
+} {
+    expression = Array()
+    (
+        <LENGTH> { return new ArrayLength(expression); }
+        | "." rightHandSide = Call(expression)
+        { expression = rightHandSide; }
+    )*
+
+    { return expression; }
+}
+
+Expression Array() : {
+    Expression expression;
+    Expression index = null;
+} {
+    expression = Terminal()
+    (LOOKAHEAD(1) "[" index = Expression() "]")?
+    { return index == null ? expression : new ArrayLookup(expression, index); }
+}
+
+Expression Call(Expression leftHandSide) : {
+    Token identifier;
+    Expression argument;
+    List<Expression> arguments = new List<Expression>();
+} {
+    identifier = <IDENTIFIER> "(" (
+        argument = Expression() { arguments.add(argument); }
+        ("," argument = Expression() { arguments.add(argument); })*
+    )? ")"
+    { return new Call(leftHandSide, new Identifier(identifier.image), arguments); }
+}
+
+Expression Terminal() : {
+    Token identifier;
+    Expression expression;
+} {
+    identifier = <INTEGER_LITERAL>
+    { return new IntegerLiteral(Integer.parseInt(identifier.image)); }
+
+    | identifier = <IDENTIFIER>
+    { return new IdentifierExpr(identifier.image); }
+
+    | <NEW> expression = New()
+    { return expression; }
+
+    | "(" expression = Expression() ")"
+    { return expression; }
+
+    | <TRUE>
+    { return new True(); }
+
+    | <FALSE>
+    { return new False(); }
+
+    | <THIS>
+    { return new This(); }
+}
+
+Expression New() : {
+    Token identifier;
+    Expression expression;
+} {
+    <INT> "[" expression = Expression() "]"
+    { return new NewArray(expression); }
+
+    | identifier = <IDENTIFIER> "(" ")"
+    { return new NewObject(new Identifier(identifier.image)); }
+}

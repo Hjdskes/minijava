@@ -38,12 +38,12 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-        <!--dependency>
+        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.10.19</version>
             <scope>test</scope>
-        </dependency-->
+        </dependency>
     </dependencies>
 
     <build>
@@ -135,6 +135,8 @@
                 <version>3.0.3</version>
                 <configuration>
                     <includeTests>true</includeTests>
+                    <!-- See: http://stackoverflow.com/questions/29594445/cobertura-maven-plugin-conflicts-with-findbugs -->
+                    <classFilesDirectory>${project.build.outputDirectory}</classFilesDirectory>
                     <!-- Exclude generated lexer/parser in org.hjdskes.id2202.generated.* -->
                     <excludeFilterFile>${project.basedir}/findbugs-exclude.xml</excludeFilterFile>
                 </configuration>
