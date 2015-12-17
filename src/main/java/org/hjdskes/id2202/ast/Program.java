@@ -2,7 +2,6 @@ package org.hjdskes.id2202.ast;
 
 import org.hjdskes.id2202.ast.classes.ClassDecl;
 import org.hjdskes.id2202.ast.classes.MainClass;
-import org.hjdskes.id2202.ast.type.Type;
 
 /**
  * The {@link Program} class represent a MiniJava program.
@@ -44,12 +43,7 @@ public class Program implements Visitable {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public Type accept(TypeVisitor visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
     }
 }

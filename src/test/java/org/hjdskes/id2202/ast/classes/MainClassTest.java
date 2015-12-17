@@ -1,7 +1,6 @@
 package org.hjdskes.id2202.ast.classes;
 
 import org.hjdskes.id2202.ast.Identifier;
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.statement.Statement;
 import org.junit.Before;
@@ -25,8 +24,6 @@ public class MainClassTest {
     private Statement body;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -72,15 +69,5 @@ public class MainClassTest {
     public void testAccept() {
         mainClass.accept(visitor);
         verify(visitor).visit(mainClass);
-    }
-
-    /**
-     * Tests if the {@link MainClass#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        mainClass.accept(typeVisitor);
-        verify(typeVisitor).visit(mainClass);
     }
 }

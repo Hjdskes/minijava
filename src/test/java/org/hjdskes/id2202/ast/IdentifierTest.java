@@ -16,8 +16,6 @@ public class IdentifierTest {
     private Identifier identifier;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -45,15 +43,5 @@ public class IdentifierTest {
     public void testAccept() {
         identifier.accept(visitor);
         verify(visitor).visit(identifier);
-    }
-
-    /**
-     * Tests if the {@link Identifier#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        identifier.accept(typeVisitor);
-        verify(typeVisitor).visit(identifier);
     }
 }

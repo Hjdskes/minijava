@@ -2,7 +2,6 @@ package org.hjdskes.id2202.ast.classes;
 
 import org.hjdskes.id2202.ast.Identifier;
 import org.hjdskes.id2202.ast.List;
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitable;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.expression.Expression;
@@ -99,12 +98,7 @@ public class MethodDecl implements Visitable {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public Type accept(TypeVisitor visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
     }
 }

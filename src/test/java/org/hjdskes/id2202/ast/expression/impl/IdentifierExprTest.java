@@ -1,6 +1,5 @@
 package org.hjdskes.id2202.ast.expression.impl;
 
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +17,6 @@ public class IdentifierExprTest {
     private IdentifierExpr identifierExpr;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -47,15 +44,5 @@ public class IdentifierExprTest {
     public void testAccept() {
         identifierExpr.accept(visitor);
         verify(visitor).visit(identifierExpr);
-    }
-
-    /**
-     * Tests if the {@link IdentifierExpr#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        identifierExpr.accept(typeVisitor);
-        verify(typeVisitor).visit(identifierExpr);
     }
 }

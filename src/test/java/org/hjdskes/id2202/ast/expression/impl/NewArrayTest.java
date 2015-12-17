@@ -1,6 +1,5 @@
 package org.hjdskes.id2202.ast.expression.impl;
 
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.expression.Expression;
 import org.junit.Before;
@@ -20,8 +19,6 @@ public class NewArrayTest {
     private Expression size;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -49,15 +46,5 @@ public class NewArrayTest {
     public void testAccept() {
         array.accept(visitor);
         verify(visitor).visit(array);
-    }
-
-    /**
-     * Tests if the {@link NewArray#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        array.accept(typeVisitor);
-        verify(typeVisitor).visit(array);
     }
 }

@@ -2,10 +2,8 @@ package org.hjdskes.id2202.ast.expression.impl;
 
 import org.hjdskes.id2202.ast.Identifier;
 import org.hjdskes.id2202.ast.List;
-import org.hjdskes.id2202.ast.expression.Expression;
-import org.hjdskes.id2202.ast.type.Type;
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
+import org.hjdskes.id2202.ast.expression.Expression;
 
 /**
  * An {@link Expression} representing a method call on an object.
@@ -54,12 +52,7 @@ public class Call implements Expression {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public Type accept(TypeVisitor visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
     }
 }

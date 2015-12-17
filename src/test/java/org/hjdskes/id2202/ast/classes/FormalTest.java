@@ -1,7 +1,6 @@
 package org.hjdskes.id2202.ast.classes;
 
 import org.hjdskes.id2202.ast.Identifier;
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.type.Type;
 import org.junit.Before;
@@ -23,8 +22,6 @@ public class FormalTest {
     private Identifier identifier;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -61,15 +58,5 @@ public class FormalTest {
     public void testAccept() {
         formal.accept(visitor);
         verify(visitor).visit(formal);
-    }
-
-    /**
-     * Tests if the {@link Formal#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        formal.accept(typeVisitor);
-        verify(typeVisitor).visit(formal);
     }
 }

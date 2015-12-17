@@ -1,6 +1,5 @@
 package org.hjdskes.id2202.ast.expression.impl;
 
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +15,6 @@ public class FalseTest {
     private False f;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor fVisitor;
 
     /**
      * Sets up the test environment.
@@ -36,15 +33,5 @@ public class FalseTest {
     public void testAccept() {
         f.accept(visitor);
         verify(visitor).visit(f);
-    }
-
-    /**
-     * Tests if the {@link False#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        f.accept(fVisitor);
-        verify(fVisitor).visit(f);
     }
 }

@@ -21,8 +21,6 @@ public class ProgramTest {
     private List<ClassDecl> classDeclarations;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -59,15 +57,5 @@ public class ProgramTest {
     public void testAccept() {
         program.accept(visitor);
         verify(visitor).visit(program);
-    }
-
-    /**
-     * Tests if the {@link Program#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        program.accept(typeVisitor);
-        verify(typeVisitor).visit(program);
     }
 }

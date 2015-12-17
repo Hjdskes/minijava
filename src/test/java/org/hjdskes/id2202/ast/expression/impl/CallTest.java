@@ -2,7 +2,6 @@ package org.hjdskes.id2202.ast.expression.impl;
 
 import org.hjdskes.id2202.ast.Identifier;
 import org.hjdskes.id2202.ast.List;
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.expression.Expression;
 import org.junit.Before;
@@ -26,8 +25,6 @@ public class CallTest {
     private List<Expression> args;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -73,15 +70,5 @@ public class CallTest {
     public void testAccept() {
         call.accept(visitor);
         verify(visitor).visit(call);
-    }
-
-    /**
-     * Tests if the {@link Call#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        call.accept(typeVisitor);
-        verify(typeVisitor).visit(call);
     }
 }

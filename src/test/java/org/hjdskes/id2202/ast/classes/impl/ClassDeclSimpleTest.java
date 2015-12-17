@@ -2,7 +2,6 @@ package org.hjdskes.id2202.ast.classes.impl;
 
 import org.hjdskes.id2202.ast.Identifier;
 import org.hjdskes.id2202.ast.List;
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.classes.MethodDecl;
 import org.hjdskes.id2202.ast.classes.VarDecl;
@@ -27,8 +26,6 @@ public class ClassDeclSimpleTest {
     private List<MethodDecl> methodDeclarations;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -74,15 +71,5 @@ public class ClassDeclSimpleTest {
     public void testAccept() {
         classDecl.accept(visitor);
         verify(visitor).visit(classDecl);
-    }
-
-    /**
-     * Tests if the {@link ClassDeclSimple#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        classDecl.accept(typeVisitor);
-        verify(typeVisitor).visit(classDecl);
     }
 }

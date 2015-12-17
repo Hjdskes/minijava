@@ -1,6 +1,5 @@
 package org.hjdskes.id2202.ast.type.impl;
 
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +15,6 @@ public class IntArrayTypeTest {
     private IntArrayType type;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -36,15 +33,5 @@ public class IntArrayTypeTest {
     public void testAccept() {
         type.accept(visitor);
         verify(visitor).visit(type);
-    }
-
-    /**
-     * Tests if the {@link IntArrayType#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        type.accept(typeVisitor);
-        verify(typeVisitor).visit(type);
     }
 }

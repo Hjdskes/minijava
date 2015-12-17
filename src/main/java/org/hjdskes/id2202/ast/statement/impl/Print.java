@@ -1,9 +1,7 @@
 package org.hjdskes.id2202.ast.statement.impl;
 
-import org.hjdskes.id2202.ast.expression.Expression;
-import org.hjdskes.id2202.ast.type.Type;
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
+import org.hjdskes.id2202.ast.expression.Expression;
 import org.hjdskes.id2202.ast.statement.Statement;
 
 /**
@@ -31,12 +29,7 @@ public class Print implements Statement {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public Type accept(TypeVisitor visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
     }
 }

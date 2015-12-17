@@ -1,7 +1,5 @@
 package org.hjdskes.id2202.ast;
 
-import org.hjdskes.id2202.ast.type.Type;
-
 /**
  * An identifier is the name of a variable, a method or a class. They are nothing themselves, but
  * just refer to what they represent.
@@ -27,12 +25,7 @@ public class Identifier implements Visitable {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public Type accept(TypeVisitor visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
     }
 }

@@ -2,7 +2,6 @@ package org.hjdskes.id2202.ast.classes;
 
 import org.hjdskes.id2202.ast.Identifier;
 import org.hjdskes.id2202.ast.List;
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.expression.Expression;
 import org.hjdskes.id2202.ast.statement.Statement;
@@ -34,8 +33,6 @@ public class MethodDeclTest {
     private Expression returnStatement;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -109,15 +106,5 @@ public class MethodDeclTest {
     public void testAccept() {
         method.accept(visitor);
         verify(visitor).visit(method);
-    }
-
-    /**
-     * Tests if the {@link MethodDecl#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        method.accept(typeVisitor);
-        verify(typeVisitor).visit(method);
     }
 }

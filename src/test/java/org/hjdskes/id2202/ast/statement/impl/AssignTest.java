@@ -1,7 +1,6 @@
 package org.hjdskes.id2202.ast.statement.impl;
 
 import org.hjdskes.id2202.ast.Identifier;
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.expression.Expression;
 import org.junit.Before;
@@ -23,8 +22,6 @@ public class AssignTest {
     private Expression expression;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -61,15 +58,5 @@ public class AssignTest {
     public void testAccept() {
         array.accept(visitor);
         verify(visitor).visit(array);
-    }
-
-    /**
-     * Tests if the {@link Assign#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        array.accept(typeVisitor);
-        verify(typeVisitor).visit(array);
     }
 }

@@ -2,12 +2,10 @@ package org.hjdskes.id2202.ast.classes.impl;
 
 import org.hjdskes.id2202.ast.Identifier;
 import org.hjdskes.id2202.ast.List;
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.classes.ClassDecl;
 import org.hjdskes.id2202.ast.classes.MethodDecl;
 import org.hjdskes.id2202.ast.classes.VarDecl;
-import org.hjdskes.id2202.ast.type.Type;
 
 /**
  * A simple class declaration. Classes are specified in the MiniJava programming language as
@@ -63,12 +61,7 @@ public class ClassDeclSimple implements ClassDecl {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public Type accept(TypeVisitor visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
     }
 }

@@ -1,6 +1,5 @@
 package org.hjdskes.id2202.ast.statement.impl;
 
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.expression.Expression;
 import org.junit.Before;
@@ -20,8 +19,6 @@ public class PrintTest {
     private Expression expression;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -49,15 +46,5 @@ public class PrintTest {
     public void testAccept() {
         print.accept(visitor);
         verify(visitor).visit(print);
-    }
-
-    /**
-     * Tests if the {@link Print#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        print.accept(typeVisitor);
-        verify(typeVisitor).visit(print);
     }
 }

@@ -1,6 +1,5 @@
 package org.hjdskes.id2202.ast.expression.impl;
 
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +17,6 @@ public class IntegerLiteralTest {
     private IntegerLiteral integerLiteral;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -47,15 +44,5 @@ public class IntegerLiteralTest {
     public void testAccept() {
         integerLiteral.accept(visitor);
         verify(visitor).visit(integerLiteral);
-    }
-
-    /**
-     * Tests if the {@link IntegerLiteral#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        integerLiteral.accept(typeVisitor);
-        verify(typeVisitor).visit(integerLiteral);
     }
 }

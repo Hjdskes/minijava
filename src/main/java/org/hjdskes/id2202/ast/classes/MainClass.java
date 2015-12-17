@@ -1,11 +1,9 @@
 package org.hjdskes.id2202.ast.classes;
 
 import org.hjdskes.id2202.ast.Identifier;
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitable;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.statement.Statement;
-import org.hjdskes.id2202.ast.type.Type;
 
 /**
  * Every MiniJava program should have one main class. That is, one class containing the typical
@@ -54,12 +52,7 @@ public class MainClass implements Visitable {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public Type accept(TypeVisitor visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
     }
 }

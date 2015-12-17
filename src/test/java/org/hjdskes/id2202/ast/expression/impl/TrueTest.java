@@ -1,6 +1,5 @@
 package org.hjdskes.id2202.ast.expression.impl;
 
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +15,6 @@ public class TrueTest {
     private True t;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor fVisitor;
 
     /**
      * Sets up the test environment.
@@ -36,15 +33,5 @@ public class TrueTest {
     public void testAccept() {
         t.accept(visitor);
         verify(visitor).visit(t);
-    }
-
-    /**
-     * Tests if the {@link True#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        t.accept(fVisitor);
-        verify(fVisitor).visit(t);
     }
 }

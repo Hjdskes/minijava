@@ -1,6 +1,5 @@
 package org.hjdskes.id2202.ast.statement.impl;
 
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.expression.Expression;
 import org.hjdskes.id2202.ast.statement.Statement;
@@ -23,8 +22,6 @@ public class WhileTest {
     private Statement body;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -61,15 +58,5 @@ public class WhileTest {
     public void testAccept() {
         w.accept(visitor);
         verify(visitor).visit(w);
-    }
-
-    /**
-     * Tests if the {@link While#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        w.accept(typeVisitor);
-        verify(typeVisitor).visit(w);
     }
 }

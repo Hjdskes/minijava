@@ -1,7 +1,6 @@
 package org.hjdskes.id2202.ast.statement.impl;
 
 import org.hjdskes.id2202.ast.List;
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.statement.Statement;
 import org.junit.Before;
@@ -21,8 +20,6 @@ public class BlockTest {
     private List<Statement> statements;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -50,15 +47,5 @@ public class BlockTest {
     public void testAccept() {
         block.accept(visitor);
         verify(visitor).visit(block);
-    }
-
-    /**
-     * Tests if the {@link Block#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        block.accept(typeVisitor);
-        verify(typeVisitor).visit(block);
     }
 }

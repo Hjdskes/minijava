@@ -1,6 +1,5 @@
 package org.hjdskes.id2202.ast.expression.impl;
 
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.expression.BinOp;
 import org.hjdskes.id2202.ast.expression.Expression;
@@ -31,8 +30,6 @@ public class BinOpExpTest {
     private Expression e2;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Returns a {@link Collection} containing all the available operators found in {@link BinOp}.
@@ -96,15 +93,5 @@ public class BinOpExpTest {
     public void testAccept() {
         binOp.accept(visitor);
         verify(visitor).visit(binOp);
-    }
-
-    /**
-     * Tests if the {@link BinOpExp#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        binOp.accept(typeVisitor);
-        verify(typeVisitor).visit(binOp);
     }
 }

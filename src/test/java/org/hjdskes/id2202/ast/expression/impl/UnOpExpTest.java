@@ -1,6 +1,5 @@
 package org.hjdskes.id2202.ast.expression.impl;
 
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.expression.UnOp;
 import org.hjdskes.id2202.ast.expression.Expression;
@@ -29,8 +28,6 @@ public class UnOpExpTest {
     private Expression e1;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Returns a {@link Collection} containing all the available operators found in {@link UnOp}.
@@ -85,15 +82,5 @@ public class UnOpExpTest {
     public void testAccept() {
         unOp.accept(visitor);
         verify(visitor).visit(unOp);
-    }
-
-    /**
-     * Tests if the {@link UnOpExp#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        unOp.accept(typeVisitor);
-        verify(typeVisitor).visit(unOp);
     }
 }

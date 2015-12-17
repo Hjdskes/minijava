@@ -8,16 +8,16 @@ import org.hjdskes.id2202.ast.classes.impl.ClassDeclExtends;
 import org.hjdskes.id2202.ast.classes.impl.ClassDeclSimple;
 import org.hjdskes.id2202.ast.expression.impl.ArrayLength;
 import org.hjdskes.id2202.ast.expression.impl.ArrayLookup;
+import org.hjdskes.id2202.ast.expression.impl.BinOpExp;
 import org.hjdskes.id2202.ast.expression.impl.Call;
 import org.hjdskes.id2202.ast.expression.impl.False;
 import org.hjdskes.id2202.ast.expression.impl.IdentifierExpr;
 import org.hjdskes.id2202.ast.expression.impl.IntegerLiteral;
 import org.hjdskes.id2202.ast.expression.impl.NewArray;
 import org.hjdskes.id2202.ast.expression.impl.NewObject;
-import org.hjdskes.id2202.ast.expression.impl.UnOpExp;
-import org.hjdskes.id2202.ast.expression.impl.BinOpExp;
 import org.hjdskes.id2202.ast.expression.impl.This;
 import org.hjdskes.id2202.ast.expression.impl.True;
+import org.hjdskes.id2202.ast.expression.impl.UnOpExp;
 import org.hjdskes.id2202.ast.statement.impl.ArrayAssign;
 import org.hjdskes.id2202.ast.statement.impl.Assign;
 import org.hjdskes.id2202.ast.statement.impl.Block;
@@ -28,51 +28,56 @@ import org.hjdskes.id2202.ast.type.impl.BooleanType;
 import org.hjdskes.id2202.ast.type.impl.IdentifierType;
 import org.hjdskes.id2202.ast.type.impl.IntArrayType;
 import org.hjdskes.id2202.ast.type.impl.IntegerType;
+import org.hjdskes.id2202.ast.type.impl.VoidType;
 
 /**
- * The {@link Visitor} interface defines the visitor part of the Visitor design pattern.
+ * The {@link Visitor<T>} interface defines the visitor part of the visitor design pattern.
+ *
+ * Using Java generics, the implementing class can return any type.
+ * @param <T> The type to return.
  */
-public interface Visitor {
+public interface Visitor<T> {
 // CHECKSTYLE.OFF: JavadocMethod
-    void visit(Program program);
+    T visit(Program program);
 
     /* Classes */
-    void visit(MainClass mainClass);
-    void visit(ClassDeclSimple classDecl);
-    void visit(ClassDeclExtends classDecl);
-    void visit(VarDecl varDecl);
-    void visit(MethodDecl methodDecl);
-    void visit(Formal formal);
+    T visit(MainClass mainClass);
+    T visit(ClassDeclSimple classDecl);
+    T visit(ClassDeclExtends classDecl);
+    T visit(VarDecl varDecl);
+    T visit(MethodDecl methodDecl);
+    T visit(Formal formal);
 
     /* Types */
-    void visit(BooleanType type);
-    void visit(IdentifierType type);
-    void visit(IntArrayType type);
-    void visit(IntegerType type);
+    T visit(BooleanType type);
+    T visit(IdentifierType type);
+    T visit(IntArrayType type);
+    T visit(IntegerType type);
+    T visit(VoidType type);
 
     /* Statements */
-    void visit(ArrayAssign arrayAsign);
-    void visit(Assign assign);
-    void visit(Block block);
-    void visit(If i);
-    void visit(Print print);
-    void visit(While w);
+    T visit(ArrayAssign arrayAsign);
+    T visit(Assign assign);
+    T visit(Block block);
+    T visit(If i);
+    T visit(Print print);
+    T visit(While w);
 
     /* Expressions */
-    void visit(ArrayLength arrayLength);
-    void visit(ArrayLookup arrayLookup);
-    void visit(BinOpExp binop);
-    void visit(Call call);
-    void visit(False f);
-    void visit(IdentifierExpr identifier);
-    void visit(IntegerLiteral integer);
-    void visit(NewArray newArray);
-    void visit(NewObject newObject);
-    void visit(This t);
-    void visit(True t);
-    void visit(UnOpExp unop);
+    T visit(ArrayLength arrayLength);
+    T visit(ArrayLookup arrayLookup);
+    T visit(BinOpExp binop);
+    T visit(Call call);
+    T visit(False f);
+    T visit(IdentifierExpr identifier);
+    T visit(IntegerLiteral integer);
+    T visit(NewArray newArray);
+    T visit(NewObject newObject);
+    T visit(This t);
+    T visit(True t);
+    T visit(UnOpExp unop);
 
     /* Misc */
-    void visit(Identifier identifier);
+    T visit(Identifier identifier);
 // CHECKSTYLE.ON: JavadocMethod
 }

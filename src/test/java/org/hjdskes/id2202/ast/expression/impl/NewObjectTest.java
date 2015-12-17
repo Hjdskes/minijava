@@ -1,7 +1,6 @@
 package org.hjdskes.id2202.ast.expression.impl;
 
 import org.hjdskes.id2202.ast.Identifier;
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +19,6 @@ public class NewObjectTest {
     private Identifier identifier;
     @Mock
     private Visitor visitor;
-    @Mock
-    private TypeVisitor typeVisitor;
 
     /**
      * Sets up the test environment.
@@ -49,15 +46,5 @@ public class NewObjectTest {
     public void testAccept() {
         object.accept(visitor);
         verify(visitor).visit(object);
-    }
-
-    /**
-     * Tests if the {@link NewObject#accept(TypeVisitor visitor)} method lets the
-     * {@link TypeVisitor} visit it.
-     */
-    @Test
-    public void testTypeAccept() {
-        object.accept(typeVisitor);
-        verify(typeVisitor).visit(object);
     }
 }

@@ -1,6 +1,5 @@
 package org.hjdskes.id2202.ast.type.impl;
 
-import org.hjdskes.id2202.ast.TypeVisitor;
 import org.hjdskes.id2202.ast.Visitor;
 import org.hjdskes.id2202.ast.type.Type;
 
@@ -10,12 +9,7 @@ import org.hjdskes.id2202.ast.type.Type;
  */
 public class IntegerType implements Type {
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public Type accept(TypeVisitor visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
     }
 }
